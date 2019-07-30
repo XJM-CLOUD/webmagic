@@ -16,12 +16,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * The type Qcc page processor.
+ *
+ * @author xiangjunming
+ * @date 2019/07/30 16:58:16
+ */
 @Log4j
 public class QccPageProcessor implements PageProcessor {
 
@@ -30,6 +35,11 @@ public class QccPageProcessor implements PageProcessor {
      */
     public static final String SEARCH = ".*?/search_index.*?";
 
+    /**
+     * Instantiates a new Qcc page processor.
+     *
+     * @param key the key
+     */
     public QccPageProcessor(String key) {
         this.key = key;
     }
@@ -62,11 +72,6 @@ public class QccPageProcessor implements PageProcessor {
      */
     private static List<QccInfo> qccInfos = new ArrayList<>();
 
-    /**
-     * 任务协作器
-     */
-    private CountDownLatch cdl;
-
     @Override
     public void process(Page page) {
         if (!page.getUrl().regex(SEARCH).match()) {
@@ -75,10 +80,6 @@ public class QccPageProcessor implements PageProcessor {
             page.addTargetRequest("https://www.qichacha.com/search_index?key=" + key + "&ajaxflag=1&p=3&");
             page.addTargetRequest("https://www.qichacha.com/search_index?key=" + key + "&ajaxflag=1&p=4&");
             page.addTargetRequest("https://www.qichacha.com/search_index?key=" + key + "&ajaxflag=1&p=5&");
-
-            //根据页码初始化协作器数量，非会员固定100记录
-//            cdl = new CountDownLatch(5);
-//            log.info("init CountDownLatch -----------------------------------");
         }
 
         try {
@@ -127,23 +128,6 @@ public class QccPageProcessor implements PageProcessor {
         //创建爬虫执行
         Spider.create(this).addUrl("https://www.qichacha.com/search?key=" + key).thread(5).run();
 
-        //Spider已处理同步, 所以不需要CDL代码
-//        try {
-//
-//            while (true) {
-//                Thread.sleep(1000);
-//                if (cdl == null) {
-//                    continue;
-//                }
-//                break;
-//            }
-//
-//            //等待线程池任务全部完成
-//            cdl.await();
-//        } catch (InterruptedException e) {
-//            log.error(e);
-//        }
-
         OutputStream out = null;
         try {
             out = new FileOutputStream("/qcc.xlsx");
@@ -167,6 +151,12 @@ public class QccPageProcessor implements PageProcessor {
 
     }
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     * @throws UnsupportedEncodingException the unsupported encoding exception
+     */
     public static void main(String[] args) throws UnsupportedEncodingException {
         String key = URLEncoder.encode("重庆火锅", "UTF-8");
         new QccPageProcessor(key).start();
