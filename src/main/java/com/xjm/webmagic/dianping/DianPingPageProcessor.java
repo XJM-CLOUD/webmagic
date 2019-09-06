@@ -32,8 +32,12 @@ public class DianPingPageProcessor implements PageProcessor {
 
     static {
         keywordMap.put("成都", 8);
+        keywordMap.put("广安", 250);
         keywordMap.put("重庆", 9);
         keywordMap.put("桂林", 226);
+        keywordMap.put("玉林", 232);
+        keywordMap.put("南宁", 224);
+        keywordMap.put("贵港", 231);
     }
 
     /**
@@ -45,7 +49,7 @@ public class DianPingPageProcessor implements PageProcessor {
         this.keyword = keyword;
         this.key = key;
 
-        String cookieStr = "_lxsdk_cuid=16c46a1e6f7c8-0b8d2ba191765a-7a1437-1fa400-16c46a1e6f7c8; _lxsdk=16c46a1e6f7c8-0b8d2ba191765a-7a1437-1fa400-16c46a1e6f7c8; _hc.v=dbea927e-02d4-0dde-a5fc-18bc9e8e54b8.1564553111; _lxsdk_s=16c46a1e6f8-b74-a23-4a%7C%7C8";
+        String cookieStr = "s_ViewType=10; _lxsdk_cuid=16c837b3a9bc8-0878432115c33f-7a1437-1fa400-16c837b3a9bc8; _lxsdk=16c837b3a9bc8-0878432115c33f-7a1437-1fa400-16c837b3a9bc8; _hc.v=5e049a4b-4a3e-0893-d170-85d57850e568.1565573987; Hm_lvt_dbeeb675516927da776beeb1d9802bd4=1565573999; Hm_lpvt_dbeeb675516927da776beeb1d9802bd4=1565573999; _lxsdk_s=16c837b38e1-7c5-5cf-5c9%7C%7C44";
 
         String[] cookies = cookieStr.split("; ");
         for(String cookie : cookies){
@@ -178,6 +182,6 @@ public class DianPingPageProcessor implements PageProcessor {
     }
 
     public static void main(String[] args) {
-        new DianPingPageProcessor("桂林", "驾校").start();
+        new DianPingPageProcessor("桂林", "装修公司").start();
     }
 }

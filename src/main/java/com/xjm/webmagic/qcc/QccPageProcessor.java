@@ -53,8 +53,8 @@ public class QccPageProcessor implements PageProcessor {
      * 设置爬虫Cookie参数
      */
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000)
-            .addCookie("QCCSESSID", "a4h71l1urahnetfa5r16ha5553")
-            .addCookie("UM_distinctid", "16c3b73d985cc0-0cc19b032c17de-7a1437-1fa400-16c3b73d986af8")
+            .addCookie("QCCSESSID", "kkcvvphvbisl00r7b2v9h9enk3")
+            .addCookie("UM_distinctid", "16c8dd4a3494f4-04f68562229242-7a1437-1fa400-16c8dd4a34abdd")
             .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36");
 
     /**
@@ -124,13 +124,18 @@ public class QccPageProcessor implements PageProcessor {
      * 开始任务
      */
     public void start() {
-
+        String key = null;
+        try {
+            key = URLEncoder.encode(this.key, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         //创建爬虫执行
         Spider.create(this).addUrl("https://www.qichacha.com/search?key=" + key).thread(5).run();
 
         OutputStream out = null;
         try {
-            out = new FileOutputStream("/qcc.xlsx");
+            out = new FileOutputStream("/qcc-" + this.key + ".xlsx");
             ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX, true);
             Sheet sheet1 = new Sheet(1, 0, QccInfo.class);
             sheet1.setSheetName("sheet1");
@@ -157,8 +162,8 @@ public class QccPageProcessor implements PageProcessor {
      * @param args the input arguments
      * @throws UnsupportedEncodingException the unsupported encoding exception
      */
-    public static void main(String[] args) throws UnsupportedEncodingException {
-        String key = URLEncoder.encode("重庆火锅", "UTF-8");
-        new QccPageProcessor(key).start();
+    public static void main(String[] args) {
+        //泸州，南充，乐山，内江，自贡，广安
+        new QccPageProcessor("广安建材公司").start();
     }
 }
